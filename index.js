@@ -7,6 +7,9 @@ const app = express();
 // Public
 app.use(express.static('public'));
 
+//read and body parse
+app.use(express.json());
+
 // Endpoints
 app.use('/api/auth', require('./routes/auth'));
 
