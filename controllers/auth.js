@@ -2,6 +2,7 @@ const { response } = require('express');
 const { validationResult } = require('express-validator');
 const bcrypt = require('bcryptjs');
 
+const { generateJWT } = require('../utils/jwt');
 const User = require('../models/User');
 
 const createUser = async (req, res = response) => {
@@ -21,10 +22,14 @@ const createUser = async (req, res = response) => {
 
         await user.save();
 
+        // Gen JWT
+        const token = await generateJWT(user.id, user.name);
+
         res.status(201).json({
             ok: true,
             uid: user.id,
-            name: user.name
+            name: user.name,
+            token
         })
 
     } catch (error) {
@@ -55,13 +60,14 @@ const userLogin = async (req, res = response) => {
                 msg: `Error in password`
             });
         }
-        // Generate json web token
+        // Gen JWT
+        const token = await generateJWT(user.id, user.name);
 
         res.json({
             ok: true,
             uid: user.id,
-            name: user.name
-
+            name: user.name,
+            token
         })
     } catch (error) {
         console.log(error);
