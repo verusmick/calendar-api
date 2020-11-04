@@ -1,8 +1,13 @@
 const express = require('express');
 require('dotenv').config();
 
+const { dbConnection } = require('./database/config');
+
 // create express server
 const app = express();
+
+// Database
+dbConnection();
 
 // Public
 app.use(express.static('public'));
@@ -13,11 +18,7 @@ app.use(express.json());
 // Endpoints
 app.use('/api/auth', require('./routes/auth'));
 
-
-
-
 // listen requaries
-
 app.listen(process.env.PORT, () => {
     console.log(`Server running in port ${process.env.PORT}`);
 });
